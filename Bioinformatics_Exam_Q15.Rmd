@@ -1,0 +1,49 @@
+---
+title: "Bioinformatics_Exam_Q15"
+author: "Galilea Guerrrero PID: A59010531"
+date: '2022-07-13'
+output: html_document
+---
+
+Import data from the Human Services (CHHS) open data site:
+https://data.chhs.ca.gov/dataset/covid-19-variant-data and loaded required packages.
+```{r}
+data <- read.csv("covid19_variants.csv")
+
+library(ggplot2)
+
+library(lubridate)
+
+library(tidyverse)
+```
+Filtered data set to remove "Total" and "Other" data points from variants.
+```{r}
+data2 <- filter(data, variant_name != "Total")
+head(data2)
+
+data3 <- filter(data2, variant_name != "Other")
+head(data3) 
+```
+
+Specify dates as a date variable.
+```{r}
+data3$date <- ymd(data3$date)
+```
+
+
+Make a line plot with variants over time. 
+```{r}
+plot <- ggplot(data3) + aes(date, percentage, group=variant_name) + 
+  geom_line(aes(color=variant_name)) + 
+  ggtitle("COVID-19 Variants in California")+
+  labs(x="", y="Percentage of Sequenced Specimens") +
+  scale_x_date(date_breaks = "1 month", date_labels = "%b %Y")+
+  scale_color_discrete(name="")
+
+plot + theme_light() + theme(axis.text.x = element_text(size=6, vjust=0.5, angle=45)) 
+```
+
+Final plot represents the prominence of COVID variants in California as a percentage of sequenced specimens over time (January 2021-July 2022). 
+
+Alpha and Delta variants appear to become prominent in the population rapidly and for a prolonged period of time. 
+
